@@ -1,35 +1,37 @@
 package com.market.cart;
 
+import java.util.ArrayList;
+
 import com.market.delivery.Delivery;
 
 public class Cart implements CartInterface {
-	static final int NUM_MENU = 3;
-	public CartItem[] cartItem = new CartItem[NUM_MENU];
-	public static int cartCount;
+	public ArrayList<CartItem> cartItem = new ArrayList<CartItem>();
+	public static int cartCount = 0;
 
 	public Cart() {
 	}
 
 	@Override
-	public void printDeliveryList(Delivery[] deliveryList) {
-		for (int i = 0; i < deliveryList.length; i++) {
-			System.out.print(deliveryList[i].getMenu() + " | ");// 메뉴
-			System.out.print(deliveryList[i].getStarScore() + " | ");// 별점
-			System.out.print(deliveryList[i].getIntroduction() + " | ");// 소개글
-			System.out.print(deliveryList[i].getCost() + " | ");// 가격
-			System.out.print(deliveryList[i].getSize() + " | ");// 1인분
-			System.out.print(deliveryList[i].getDeliveryTime() + " | ");// 배달시간
+	public void printDeliveryList(ArrayList<Delivery> deliveryList) {
+		for (int i = 0; i < deliveryList.size(); i++) {
+			Delivery delivery = deliveryList.get(i);
+			System.out.print(delivery.getMenu() + " | ");// 메뉴
+			System.out.print(delivery.getStarScore() + " | ");// 별점
+			System.out.print(delivery.getIntroduction() + " | ");// 소개글
+			System.out.print(delivery.getCost() + " | ");// 가격
+			System.out.print(delivery.getSize() + " | ");// 1인분
+			System.out.print(delivery.getDeliveryTime());// 배달시간
 			System.out.println("");
 		}
-
+		
 	}
 
 	@Override
 	public boolean isCartInDelivery(String menu) {
 		boolean flag = false;
-		for (int i = 0; i < cartCount; i++) {
-			if (menu == cartItem[i].getMenu()) {
-				cartItem[i].setQuantity(cartItem[i].getQuantity() + 1);
+		for (int i = 0; i < cartItem.size(); i++) {
+			if(menu.equals(cartItem.get(i).getMenu())) {
+				cartItem.get(i).setQuantity(cartItem.get(i).getQuantity() + 1);
 				flag = true;
 			}
 		}
@@ -38,25 +40,20 @@ public class Cart implements CartInterface {
 
 	@Override
 	public void insertDelivery(Delivery delivery) {
-		cartItem[cartCount++] = new CartItem(delivery);
+		CartItem deliveryItem = new CartItem(delivery);
+		cartItem.add(deliveryItem);
+		cartCount = cartItem.size();
 	}
 
 	@Override
 	public void removeCart(int num) {
-		CartItem[] cartItem = new CartItem[NUM_MENU];
-		int number = 0;
-		for (int i = 0; i < cartCount; i++)
-			if (num != i)
-				cartItem[number++] = cartItem[i];
-
-		cartCount = number;
-		cartItem = cartItem;
-
+		cartItem.remove(num);
+		cartCount = cartItem.size();
 	}
 
 	@Override
 	public void deleteDelivery() {
-		CartItem[] cartItem = new CartItem[NUM_MENU];
+		cartItem.clear();
 		cartCount = 0;
 	}
 
@@ -64,12 +61,14 @@ public class Cart implements CartInterface {
 		System.out.println("배달 목록 보기");
 		System.out.println("---------------------------------------------");
 		System.out.println(" 메뉴\t | 수량 \t|  합계");
-		for (int i = 0; i < cartCount; i++) {
-			System.out.print("  " + cartItem[i].getMenu() + " \t| ");
-			System.out.print("  " + cartItem[i].getQuantity() + " \t| ");
-			System.out.print("  " + cartItem[i].getTotalPrice());
+		for (int i = 0; i < cartItem.size(); i++) {
+			System.out.print("  " + cartItem.get(i).getMenu() + " \t| ");
+			System.out.print("  " + cartItem.get(i).getQuantity() + " \t| ");
+			System.out.print("  " + cartItem.get(i).getTotalPrice());
 			System.out.println(" ");
 		}
 		System.out.println("---------------------------------------------");
 	}
+
+
 }

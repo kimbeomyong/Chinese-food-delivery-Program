@@ -1,9 +1,11 @@
 package com.market.cart;
 
+import java.util.ArrayList;
+
 import com.market.delivery.Delivery;
 
 public interface CartInterface {
-	void printDeliveryList(Delivery[] p);
+	void printDeliveryList(ArrayList<Delivery> deliveryList);
 
 	boolean isCartInDelivery(String menu);
 
@@ -12,4 +14,5 @@ public interface CartInterface {
 	void removeCart(int num);
 
 	void deleteDelivery();
+
 }

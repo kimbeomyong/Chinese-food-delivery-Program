@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -27,7 +28,7 @@ public class DeliveryMain {
 		String name;// 이름
 		int phoneNumber;// 전화번호
 		int number;// 메뉴 번호 선택
-		Delivery[] menu;
+		ArrayList<Delivery> menu;
 		int totalDeliveryCount = 0;
 
 		System.out.println("고객 정보 입력");
@@ -65,7 +66,7 @@ public class DeliveryMain {
 						break;
 					case 4:
 						totalDeliveryCount = totalFileToDeliveryList();
-						menu = new Delivery[totalDeliveryCount];
+						menu = new ArrayList<Delivery>();
 						menuAdd(menu);
 						break;
 					case 5:
@@ -134,7 +135,7 @@ public class DeliveryMain {
 		}
 	}
 
-	public static void menuAdd(Delivery[] delivery) {
+	public static void menuAdd(ArrayList<Delivery> delivery) {
 		menuList(delivery); // 메뉴 정보가 저장되어 있는 메서드 호출
 
 		cart.printDeliveryList(delivery);
@@ -146,8 +147,8 @@ public class DeliveryMain {
 			String inputStr = input.nextLine();
 			boolean flag = false; // 일치 여부
 			int num = -1; // 인덱스 번호
-			for (int i = 0; i < NUM_MENU; i++) {
-				if (inputStr.equals(delivery[i].getMenu())) {
+			for (int i = 0; i < delivery.size(); i++) {
+				if (inputStr.equals(delivery.get(i).getMenu())) {
 					num = i;
 					flag = true;
 					break;
@@ -159,10 +160,10 @@ public class DeliveryMain {
 				inputStr = input.nextLine();
 
 				if (inputStr.toUpperCase().equals("Y") || inputStr.toUpperCase().equals("y")) {
-					System.out.println(delivery[num] + " 메뉴가 장바구니에추가되었습니다.");
+					System.out.println(delivery.get(num) + " 메뉴가 장바구니에추가되었습니다.");
 					// 장바구니에 넣기
-					if (!isCartInMenu(delivery[num].getMenu())) {
-						cart.insertDelivery(delivery[num]);
+					if (!isCartInMenu(delivery.get(num).getMenu())) {
+						cart.insertDelivery(delivery.get(num));
 					}
 				}
 				quit = true;
@@ -190,7 +191,7 @@ public class DeliveryMain {
 				boolean flag = false;
 				int numId = -1;
 				for (int i = 0; i < cart.cartCount; i++) {
-					if (str.equals(cart.cartItem[i].getMenu())) {
+					if (str.equals(cart.cartItem.get(i).getMenu())) {
 						numId = i;
 						flag = true;
 						break;
@@ -199,8 +200,8 @@ public class DeliveryMain {
 				if (flag) {
 					System.out.println("장바구니의 항목을 삭제하겠습니까? Y | N ");
 					str = input.nextLine();
-					if (str.toUpperCase().equals("Y") || str.toUpperCase().equals("y")) {
-						System.out.println(cart.cartItem[numId].getMenu() + "장바구니에서 메뉴가 삭제되었습니다.");
+					if (str.toUpperCase().equals("Y") || str.toUpperCase().equals("y")){
+						System.out.println(cart.cartItem.get(numId).getMenu() + "장바구니에서 메뉴가 삭제되었습니다.");
 						cart.removeCart(numId);
 					}
 
@@ -255,7 +256,11 @@ public class DeliveryMain {
 		delivery[2].setSize("2인분");
 
 	}
-
+	
+	public static void menuList(ArrayList<Delivery> delivery) {
+		setFileToDeliveryList(delivery);
+		}
+	
 	public static boolean isCartInMenu(String menu) {
 		return cart.isCartInDelivery(menu);
 	}
@@ -314,7 +319,7 @@ public class DeliveryMain {
 		} else {
 			System.out.println("관리자 정보가 일치하지 않습니다.");
 		}
-		if (adminId.equals(admin.getId()) && adminPW.equals(admin.getPassword())){
+		if (adminId.equals(admin.getId()) && adminPW.equals(admin.getPassword())) {
 			System.out.println("이름 : " + admin.getName() + ", 연락처 : " + admin.getPhone());
 			System.out.println("아이디 : " + admin.getId() + ", 비밀번호 : " + admin.getPassword());
 		} else {
@@ -335,7 +340,7 @@ public class DeliveryMain {
 		// 장바구니에 담긴 항목의 총 금액 계산
 		int sum = 0;
 		for (int i = 0; i < cart.cartCount; i++) {
-			sum += cart.cartItem[i].getTotalPrice();
+			sum += cart.cartItem.get(i).getTotalPrice();
 		}
 		System.out.println("\t\t\t 주문 총금액 : " + sum + "원\n");
 		System.out.println("----------------------------------------------");
@@ -363,7 +368,7 @@ public class DeliveryMain {
 		return 0;
 	}
 
-	public static void setFileToBookList(Delivery[] deliveryList) {
+	public static void setFileToDeliveryList(ArrayList<Delivery> deliveryList) {
 		try {
 			FileReader fr = new FileReader("delivery.txt");
 			BufferedReader reader = new BufferedReader(fr);
@@ -380,8 +385,9 @@ public class DeliveryMain {
 					readDelivery[4] = reader.readLine();
 					readDelivery[5] = reader.readLine();
 				}
-				deliveryList[count++] = new Delivery(readDelivery[0], readDelivery[1], readDelivery[2],
+				Delivery delivery = new Delivery(readDelivery[0], readDelivery[1], readDelivery[2],
 						Integer.parseInt(readDelivery[3]), readDelivery[4], readDelivery[5]);
+				deliveryList.add(delivery);
 			}
 			reader.close();
 			fr.close();
