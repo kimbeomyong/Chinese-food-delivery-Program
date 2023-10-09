@@ -1,5 +1,8 @@
 package com.market.main;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -24,7 +27,8 @@ public class DeliveryMain {
 		String name;// 이름
 		int phoneNumber;// 전화번호
 		int number;// 메뉴 번호 선택
-		Delivery[] menu = new Delivery[NUM_MENU];
+		Delivery[] menu;
+		int totalDeliveryCount = 0;
 
 		System.out.println("고객 정보 입력");
 		System.out.println("이름 : ");
@@ -60,6 +64,8 @@ public class DeliveryMain {
 						menuClear();
 						break;
 					case 4:
+						totalDeliveryCount = totalFileToDeliveryList();
+						menu = new Delivery[totalDeliveryCount];
 						menuAdd(menu);
 						break;
 					case 5:
@@ -114,7 +120,7 @@ public class DeliveryMain {
 		}
 	}
 
-	public static void menuClear() throws CartException{
+	public static void menuClear() throws CartException {
 		if (cart.cartCount == 0) {
 			System.out.println("장바구니에 항목이 없습니다");
 		} else {
@@ -170,7 +176,7 @@ public class DeliveryMain {
 		System.out.println("5. 장바구니의 항목 수량 줄이기");
 	}
 
-	public static void menuDelete() throws CartException{
+	public static void menuDelete() throws CartException {
 		if (cart.cartCount == 0) {
 			throw new CartException("장바구니에 항목이 없습니다");
 		} else {
@@ -206,7 +212,7 @@ public class DeliveryMain {
 		}
 	}
 
-	public static void menuBill() throws CartException{
+	public static void menuBill() throws CartException {
 		if (cart.cartCount == 0) {
 			throw new CartException("장비구니에 항목이 없습니다");
 		} else {
@@ -258,12 +264,57 @@ public class DeliveryMain {
 	public static void menuAdminLogin() {
 		System.out.println("관리자 정보를 입력하세요");
 		Scanner input = new Scanner(System.in);
+
 		System.out.print("아이디 : ");
 		String adminId = input.next();
+
 		System.out.print("비밀번호 : ");
 		String adminPW = input.next();
+
 		Admin admin = new Admin(user.getName(), user.getPhone());
 		if (adminId.equals(admin.getId()) && adminPW.equals(admin.getPassword())) {
+			String[] writeDelivery = new String[8];
+			System.out.println("메뉴 정보를 추가하겠습니까? Y | N ");
+			String str = input.next();
+			if (str.toUpperCase().equals("Y")) {
+				Date date = new Date();
+				SimpleDateFormat formatter = new SimpleDateFormat("yyMMddhhmmss");
+				String strDate = formatter.format(date);
+				writeDelivery[0] = "Delivery" + strDate;
+				System.out.println("메뉴 : " + writeDelivery[0]);
+				String str1 = input.nextLine();
+				System.out.print("별점 : ");
+				writeDelivery[1] = input.nextLine();
+				System.out.print("소개글 : ");
+				writeDelivery[2] = input.nextLine();
+				System.out.print("가격(숫자) : ");
+				writeDelivery[3] = input.nextLine();
+				System.out.print("X인분 : ");
+				writeDelivery[4] = input.nextLine();
+				System.out.print("배달시간 : ");
+				writeDelivery[5] = input.nextLine();
+
+				try {
+					// 새 메뉴ㄴ 정보를 파일에 추가하기 위해 생성자에 true 옵션 설정
+					FileWriter fw = new FileWriter("delivery.txt", true);
+					for (int i = 0; i < 6; i++) {
+						fw.write(writeDelivery[i] + "\n");
+					}
+
+					fw.close();
+
+					System.out.println("새 메뉴 정보가 저장되었습니다.");
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+			} else {
+				System.out.println("이름 : " + admin.getName() + ", 연락처 : " + admin.getPhone());
+				System.out.println("아이디 : " + admin.getId() + ", 비밀번호 : " + admin.getPassword());
+			}
+		} else {
+			System.out.println("관리자 정보가 일치하지 않습니다.");
+		}
+		if (adminId.equals(admin.getId()) && adminPW.equals(admin.getPassword())){
 			System.out.println("이름 : " + admin.getName() + ", 연락처 : " + admin.getPhone());
 			System.out.println("아이디 : " + admin.getId() + ", 비밀번호 : " + admin.getPassword());
 		} else {
@@ -271,7 +322,6 @@ public class DeliveryMain {
 		}
 	}
 
-	//
 	public static void printBill(String name, String phone, String address) {
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -291,6 +341,53 @@ public class DeliveryMain {
 		System.out.println("----------------------------------------------");
 		System.out.println();
 
+	}
+
+	public static int totalFileToDeliveryList() {
+		try {
+			FileReader fr = new FileReader("delivery.txt");
+			BufferedReader reader = new BufferedReader(fr);
+			String str;
+			int num = 0;// 도서의 개수
+			while ((str = reader.readLine()) != null) {
+				if (str.contains("starScore")) {
+					++num;
+				}
+			}
+			reader.close();
+			fr.close();
+			return num;
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return 0;
+	}
+
+	public static void setFileToBookList(Delivery[] deliveryList) {
+		try {
+			FileReader fr = new FileReader("delivery.txt");
+			BufferedReader reader = new BufferedReader(fr);
+			String menu;
+			String[] readDelivery = new String[6];
+			int count = 0;
+
+			while ((menu = reader.readLine()) != null) {
+				if (menu.contains("delivery")) {
+					readDelivery[0] = menu;
+					readDelivery[1] = reader.readLine();
+					readDelivery[2] = reader.readLine();
+					readDelivery[3] = reader.readLine();
+					readDelivery[4] = reader.readLine();
+					readDelivery[5] = reader.readLine();
+				}
+				deliveryList[count++] = new Delivery(readDelivery[0], readDelivery[1], readDelivery[2],
+						Integer.parseInt(readDelivery[3]), readDelivery[4], readDelivery[5]);
+			}
+			reader.close();
+			fr.close();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 
 }
