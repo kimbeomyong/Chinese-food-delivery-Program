@@ -1,5 +1,7 @@
 package com.market.main;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 import com.market.cart.Cart;
@@ -196,7 +198,28 @@ public class DeliveryMain {
 	}
 
 	public static void menuBill() {
-		System.out.println("7. 영수증 표시하기");
+		if (cart.cartCount == 0) {
+			System.out.println("장비구니에 항목이 없습니다");
+		} else {
+			System.out.println("배송받을 분은 고객정보와 같습니까? Y | N ");
+			Scanner input = new Scanner(System.in);
+			String str = input.nextLine();
+			if (str.toUpperCase().equals("Y") || str.toUpperCase().equals("y")) {
+				System.out.print("배송지를 입력해주세요 ");
+				String address = input.nextLine();
+				// 주문 처리 후 영수증 출력 메서드 호출
+				printBill(user.getName(), String.valueOf(user.getPhone()), address);
+			} else {
+				System.out.print("배송받을 고객명을 입력하세요 ");
+				String name = input.nextLine();
+				System.out.print("배송받을 고객의 연락처를 입력하세요 ");
+				String phone = input.nextLine();
+				System.out.print("배송받을 고객의 배송지를 입력해주세요 ");
+				String address = input.nextLine();
+				// 주문 처리 후 영수증 출력 메서드 호출
+				printBill(name, phone, address);
+			}
+		}
 	}
 
 	public static void menuExit() {
@@ -204,19 +227,18 @@ public class DeliveryMain {
 	}
 
 	public static void menuList(Delivery[] delivery) {
-		delivery[0] = new Delivery("짜장면","별점 : 4.9점",7000,"배달시간 : 31~ 46분 소요 예상");		
+		delivery[0] = new Delivery("짜장면", "별점 : 4.9점", 7000, "배달시간 : 31~ 46분 소요 예상");
 		delivery[0].setIntroduction("호로록 끊임없이 넘어가는 단맛이 덜한 옛날짜장");
 		delivery[0].setSize("1인분");
-		
 
-		delivery[1] = new Delivery("짬뽕","별점 : 4.2점",8000,"배달시간 : 31~ 46분 소요 예상");
+		delivery[1] = new Delivery("짬뽕", "별점 : 4.2점", 8000, "배달시간 : 31~ 46분 소요 예상");
 		delivery[1].setIntroduction("강한불에 해물과 야채가 만나 시원함 UP!!UP!!");
 		delivery[1].setSize("1인분");
-		
-		delivery[2] = new Delivery("탕수육","별점 : 4.8점",22000,"배달시간 : 31~ 46분 소요 예상");	
+
+		delivery[2] = new Delivery("탕수육", "별점 : 4.8점", 22000, "배달시간 : 31~ 46분 소요 예상");
 		delivery[2].setIntroduction("★ 사장님이 강력 추천하는 메뉴!! ★");
 		delivery[2].setSize("2인분");
-		
+
 	}
 
 	public static boolean isCartInMenu(String menu) {
@@ -240,4 +262,26 @@ public class DeliveryMain {
 		}
 	}
 
+	//
+	public static void printBill(String name, String phone, String address) {
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		String strDate = formatter.format(date);
+		System.out.println();
+		System.out.println("---------------배송 받을 고객 정보----------------");
+		System.out.println("고객명 : " + name + " \t\t 연락처 : " + phone);
+		System.out.println("배송지 : " + address + "\t 발송일 : " + strDate);
+		// 장바구니에 담긴 항목 출력
+		cart.printCart();
+		// 장바구니에 담긴 항목의 총 금액 계산
+		int sum = 0;
+		for (int i = 0; i < cart.cartCount; i++) {
+		sum += cart.cartItem[i].getTotalPrice();
+		}
+		System.out.println("\t\t\t 주문 총금액 : " + sum + "원\n");
+		System.out.println("----------------------------------------------");
+		System.out.println();
+		
+	}
+	
 }
