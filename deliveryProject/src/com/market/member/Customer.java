@@ -1,4 +1,4 @@
-package Cart;
+package com.market.member;
 
 public class Customer {
 	private String name; // 이름

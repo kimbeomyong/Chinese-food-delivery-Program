@@ -1,28 +1,30 @@
-package Cart;
+package com.market.cart;
+
+import com.market.delivery.Delivery;
 
 public class CartItem {
 
-	private String[] menuItem = new String[5]; // 메뉴 정보의 개수
+	private Delivery itemDelivery;
 	private String menu; // menu
 	private int quantity; // 메뉴 수량
-	private int totalPrice; // 도서 합계 가격
+	private int totalPrice; //합계 가격
 
 	public CartItem() {
 	}
 
-	public CartItem(String[] menuItem) {
-		this.menuItem = menuItem;
-		this.menu = menuItem[0];
+	public CartItem(Delivery itemDelivery) {
+		this.itemDelivery = itemDelivery;
+		this.menu = itemDelivery.getMenu();
 		this.quantity = 1;
 		updateTotalPrice();
 	}
 
-	public String[] getMenuItem() {
-		return menuItem;
+	public Delivery getItemDelivery() {
+		return itemDelivery;
 	}
 
-	public void setMenuItem(String[] menuItem) {
-		this.menuItem = menuItem;
+	public void setitemDelivery(Delivery itemDelivery) {
+		this.itemDelivery = itemDelivery;
 	}
 
 	public String getMenu() {
@@ -48,7 +50,7 @@ public class CartItem {
 	}
 
 	public void updateTotalPrice() {
-		totalPrice = Integer.parseInt(this.menuItem[3]) * this.quantity;
+		totalPrice = this.itemDelivery.getCost() * this.quantity;
 	}
 
 }
