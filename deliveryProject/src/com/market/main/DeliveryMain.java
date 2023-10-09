@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import com.market.cart.Cart;
 import com.market.delivery.Delivery;
+import com.market.exception.CartException;
 import com.market.member.Admin;
 import com.market.member.Customer;
 import com.market.member.User;
@@ -40,43 +41,51 @@ public class DeliveryMain {
 		while (!quit) {
 			menuIntroduction();
 
-			System.out.println("번호를 선택해주세요>>");
-			number = scan.nextInt();
+			try {
+				System.out.println("번호를 선택해주세요>>");
+				number = scan.nextInt();
 
-			// 입력한 번호 결과
-			if (number < 1 || number > 9) {
-				System.out.print("1~9까지 숫자를 입력하세요.\n");// 번호를 잘못 입력했을경우
-			} else {
-				switch (number) {
-				case 1:
-					menuInformation(name, phoneNumber);
-					break;
-				case 2:
-					menuItemList();
-					break;
-				case 3:
-					menuClear();
-					break;
-				case 4:
-					menuAdd(menu);
-					break;
-				case 5:
-					menuCutDown();
-					break;
-				case 6:
-					menuDelete();
-					break;
-				case 7:
-					menuBill();
-					break;
-				case 8:
-					menuExit();
-					quit = true;// while 문 종료
-					break;
-				case 9:
-					menuAdminLogin();
-					break;
+				// 입력한 번호 결과
+				if (number < 1 || number > 9) {
+					System.out.print("1~9까지 숫자를 입력하세요.\n");// 번호를 잘못 입력했을경우
+				} else {
+					switch (number) {
+					case 1:
+						menuInformation(name, phoneNumber);
+						break;
+					case 2:
+						menuItemList();
+						break;
+					case 3:
+						menuClear();
+						break;
+					case 4:
+						menuAdd(menu);
+						break;
+					case 5:
+						menuCutDown();
+						break;
+					case 6:
+						menuDelete();
+						break;
+					case 7:
+						menuBill();
+						break;
+					case 8:
+						menuExit();
+						quit = true;// while 문 종료
+						break;
+					case 9:
+						menuAdminLogin();
+						break;
+					}
 				}
+			} catch (CartException e) {
+				System.out.println(e.getMessage());
+				quit = true;
+			} catch (Exception e) {
+				System.out.println("잘못된 메뉴 선택으로 종료합니다.");
+				quit = true;
 			}
 		}
 	}
@@ -105,7 +114,7 @@ public class DeliveryMain {
 		}
 	}
 
-	public static void menuClear() {
+	public static void menuClear() throws CartException{
 		if (cart.cartCount == 0) {
 			System.out.println("장바구니에 항목이 없습니다");
 		} else {
@@ -161,9 +170,9 @@ public class DeliveryMain {
 		System.out.println("5. 장바구니의 항목 수량 줄이기");
 	}
 
-	public static void menuDelete() {
+	public static void menuDelete() throws CartException{
 		if (cart.cartCount == 0) {
-			System.out.println("장바구니에 항목이 없습니다");
+			throw new CartException("장바구니에 항목이 없습니다");
 		} else {
 			menuItemList();
 			boolean quit = false;
@@ -197,9 +206,9 @@ public class DeliveryMain {
 		}
 	}
 
-	public static void menuBill() {
+	public static void menuBill() throws CartException{
 		if (cart.cartCount == 0) {
-			System.out.println("장비구니에 항목이 없습니다");
+			throw new CartException("장비구니에 항목이 없습니다");
 		} else {
 			System.out.println("배송받을 분은 고객정보와 같습니까? Y | N ");
 			Scanner input = new Scanner(System.in);
@@ -276,12 +285,12 @@ public class DeliveryMain {
 		// 장바구니에 담긴 항목의 총 금액 계산
 		int sum = 0;
 		for (int i = 0; i < cart.cartCount; i++) {
-		sum += cart.cartItem[i].getTotalPrice();
+			sum += cart.cartItem[i].getTotalPrice();
 		}
 		System.out.println("\t\t\t 주문 총금액 : " + sum + "원\n");
 		System.out.println("----------------------------------------------");
 		System.out.println();
-		
+
 	}
-	
+
 }
