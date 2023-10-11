@@ -107,22 +107,22 @@ public class DeliveryMain {
 		System.out.println("(8)메뉴 목록 추가(사장님만 사용하세요!!)");
 		System.out.println("----------------------------------------------");
 	}
-	
-	//1번 메소드
+
+	// 1번 메소드
 	public static void menuInformation(String name, int phoneNumber) {
 		Customer ct = new Customer(name, phoneNumber);
 		System.out.println("현재 고객 정보");
 		System.out.println("이름 : " + ct.getName() + ", 연락처 : " + ct.getPhone());
 	}
 
-	//2번 메소드
+	// 2번 메소드
 	public static void menuItemList() {
 		if (cart.cartCount >= 0) {
 			cart.printCart();
 		}
 	}
 
-	//3번 메소드
+	// 3번 메소드
 	public static void menuClear() throws CartException {
 		if (cart.cartCount == 0) {
 			System.out.println("장바구니에 항목이 없습니다");
@@ -137,7 +137,7 @@ public class DeliveryMain {
 		}
 	}
 
-	//4번 메소드
+	// 4번 메소드
 	public static void menuAdd(ArrayList<Delivery> delivery) {
 		menuList(delivery); // 메뉴 정보가 저장되어 있는 메서드 호출
 
@@ -176,13 +176,14 @@ public class DeliveryMain {
 		}
 	}
 
-	//5번 메소드
+	// 5번 메소드
 	public static void menuDelete() throws CartException {
 		if (cart.cartCount == 0) {
 			throw new CartException("장바구니에 항목이 없습니다");
 		} else {
 			menuItemList();
 			boolean quit = false;
+			// 반복문 (quit = true 가 되면 반복문 끝남.)
 			while (!quit) {
 
 				System.out.print("장바구니에서 삭제할 메뉴를 입력하세요 :");
@@ -213,7 +214,7 @@ public class DeliveryMain {
 		}
 	}
 
-	//6번 메소드
+	// 6번 메소드
 	public static void menuBill() throws CartException {
 		if (cart.cartCount == 0) {
 			throw new CartException("장비구니에 항목이 없습니다");
@@ -238,15 +239,17 @@ public class DeliveryMain {
 			}
 		}
 	}
-	//7번 메소드
+
+	// 7번 메소드
 	public static void menuExit() {
-		System.out.println("종료");
+		System.out.println("메뉴판을 종료합니다");
 	}
 
-	//8번 메뉴 추가 메소드
+	// 8번 메뉴 추가 메소드
 	public static void menuAdminLogin() {
-		System.out.println("관리자 정보를 입력하세요");
 		Scanner input = new Scanner(System.in);
+
+		System.out.println("관리자 정보를 입력하세요");
 
 		System.out.print("아이디 : ");
 		String adminId = input.next();
@@ -255,32 +258,36 @@ public class DeliveryMain {
 		String adminPW = input.next();
 
 		Admin admin = new Admin(user.getName(), user.getPhone());
+
 		if (adminId.equals(admin.getId()) && adminPW.equals(admin.getPassword())) {
-			String[] writeDelivery = new String[8];
+			String[] writeDelivery = new String[6];
 			System.out.println("메뉴 정보를 추가하겠습니까? Y | N ");
 			String str = input.next();
-			if (str.toUpperCase().equals("Y")) {
-				Date date = new Date();
-				SimpleDateFormat formatter = new SimpleDateFormat("yyMMddhhmmss");
-				String strDate = formatter.format(date);
-	
-				System.out.println("메뉴 : ");
+			input.nextLine();//입력버퍼클리어??
+			if (str.equals("Y")||str.equals("y")) {
+				
+				System.out.println("메뉴명 : ");
 				writeDelivery[0] = input.nextLine();
-				System.out.print("별점 : ");
+
+				System.out.println("별점(5.0점) : ");
 				writeDelivery[1] = input.nextLine();
-				System.out.print("가격(숫자) : ");
+
+				System.out.println("가격(ex:1000) : ");
 				writeDelivery[2] = input.nextLine();
-				System.out.print("소개글 : ");
+
+				System.out.println("소개글 : ");
 				writeDelivery[3] = input.nextLine();
-				System.out.print("제품양(EX:1인분) : ");
+
+				System.out.println("제품양(EX:1인분) : ");
 				writeDelivery[4] = input.nextLine();
-				System.out.print("배달시간 : ");
+
+				System.out.println("배달시간 : ");
 				writeDelivery[5] = input.nextLine();
 
 				try {
-					// 새 메뉴ㄴ 정보를 파일에 추가하기 위해 생성자에 true 옵션 설정
+					// 새 메뉴 정보를 파일에 추가하기 위해 생성자에 true 옵션 설정
 					FileWriter fw = new FileWriter("delivery.txt", true);
-					for (int i = 0; i < 6; i++) {
+					for (int i = 0; i <= 5; i++) {
 						fw.write(writeDelivery[i] + "\n");
 					}
 
@@ -312,8 +319,8 @@ public class DeliveryMain {
 	public static boolean isCartInMenu(String menu) {
 		return cart.isCartInDelivery(menu);
 	}
-	
-	//영수증 출력
+
+	// 영수증 출력
 	public static void printBill(String name, String phone, String address) {
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -322,10 +329,10 @@ public class DeliveryMain {
 		System.out.println("---------------배송 받을 고객 정보----------------");
 		System.out.println("고객명 : " + name + " \t\t 연락처 : " + phone);
 		System.out.println("배송지 : " + address + "\t 발송일 : " + strDate);
-		
+
 		// 장바구니에 담긴 항목 출력
 		cart.printCart();
-		
+
 		// 장바구니에 담긴 항목의 총 금액 계산
 		int sum = 0;
 		for (int i = 0; i < cart.cartCount; i++) {
@@ -363,14 +370,14 @@ public class DeliveryMain {
 			String menu;
 			String[] readDelivery = new String[6];
 			int count = 0;
-			
+
 			while ((menu = reader.readLine()) != null) {
-					readDelivery[0] = menu;
-					readDelivery[1] = reader.readLine();
-					readDelivery[2] = reader.readLine();
-					readDelivery[3] = reader.readLine();
-					readDelivery[4] = reader.readLine();
-					readDelivery[5] = reader.readLine();
+				readDelivery[0] = menu;
+				readDelivery[1] = reader.readLine();
+				readDelivery[2] = reader.readLine();
+				readDelivery[3] = reader.readLine();
+				readDelivery[4] = reader.readLine();
+				readDelivery[5] = reader.readLine();
 				Delivery delivery = new Delivery(readDelivery[0], readDelivery[1], Integer.parseInt(readDelivery[2]),
 						readDelivery[3], readDelivery[4], readDelivery[5]);
 				deliveryList.add(delivery);
