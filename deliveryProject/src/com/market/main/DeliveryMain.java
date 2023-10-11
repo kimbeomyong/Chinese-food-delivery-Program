@@ -72,19 +72,16 @@ public class DeliveryMain {
 						menuAdd(menu);
 						break;
 					case 5:
-						menuCutDown();
-						break;
-					case 6:
 						menuDelete();
 						break;
-					case 7:
+					case 6:
 						menuBill();
 						break;
-					case 8:
+					case 7:
 						menuExit();
 						quit = true;// while 문 종료
 						break;
-					case 9:
+					case 8:
 						menuAdminLogin();
 						break;
 					}
@@ -101,28 +98,31 @@ public class DeliveryMain {
 
 	public static void menuIntroduction() {
 		System.out.println("----------------------------------------------");
-		System.out.println("\t  중식 메뉴");
+		System.out.println("\t\t JAVA 중식");
 		System.out.println("----------------------------------------------");
 		System.out.println("1. 고객 정보 확인하기  \t 2. 배달 메뉴 목록 보기");
 		System.out.println("3. 장바구니 비우기    \t 4. 장바구니에 항목 추가하기");
-		System.out.println("5. 장바구니의 항목수량 줄이기  \t 6. 장바구니의 항목 삭제하기");
-		System.out.println("7. 영수증 표시하기    \t 8. 종료");
-		System.out.println("9. 관리자 로그인");
+		System.out.println("5. 장바구니의 항목 삭제하기  \t 6.영수증 표시하기 ");
+		System.out.println("7. 종료");
+		System.out.println("(8)메뉴 목록 추가(사장님만 사용하세요!!)");
 		System.out.println("----------------------------------------------");
 	}
-
+	
+	//1번 메소드
 	public static void menuInformation(String name, int phoneNumber) {
 		Customer ct = new Customer(name, phoneNumber);
 		System.out.println("현재 고객 정보");
 		System.out.println("이름 : " + ct.getName() + ", 연락처 : " + ct.getPhone());
 	}
 
+	//2번 메소드
 	public static void menuItemList() {
 		if (cart.cartCount >= 0) {
 			cart.printCart();
 		}
 	}
 
+	//3번 메소드
 	public static void menuClear() throws CartException {
 		if (cart.cartCount == 0) {
 			System.out.println("장바구니에 항목이 없습니다");
@@ -137,6 +137,7 @@ public class DeliveryMain {
 		}
 	}
 
+	//4번 메소드
 	public static void menuAdd(ArrayList<Delivery> delivery) {
 		menuList(delivery); // 메뉴 정보가 저장되어 있는 메서드 호출
 
@@ -175,10 +176,7 @@ public class DeliveryMain {
 		}
 	}
 
-	public static void menuCutDown() {
-		System.out.println("5. 장바구니의 항목 수량 줄이기");
-	}
-
+	//5번 메소드
 	public static void menuDelete() throws CartException {
 		if (cart.cartCount == 0) {
 			throw new CartException("장바구니에 항목이 없습니다");
@@ -215,6 +213,7 @@ public class DeliveryMain {
 		}
 	}
 
+	//6번 메소드
 	public static void menuBill() throws CartException {
 		if (cart.cartCount == 0) {
 			throw new CartException("장비구니에 항목이 없습니다");
@@ -239,20 +238,12 @@ public class DeliveryMain {
 			}
 		}
 	}
-
+	//7번 메소드
 	public static void menuExit() {
-		System.out.println("8. 종료");
+		System.out.println("종료");
 	}
 
-	public static void menuList(ArrayList<Delivery> delivery) {
-		setFileToDeliveryList(delivery);
-	}
-
-	public static boolean isCartInMenu(String menu) {
-		return cart.isCartInDelivery(menu);
-	}
-
-	// 관리자 로그인 정보 확인 메서드
+	//8번 메뉴 추가 메소드
 	public static void menuAdminLogin() {
 		System.out.println("관리자 정보를 입력하세요");
 		Scanner input = new Scanner(System.in);
@@ -272,16 +263,16 @@ public class DeliveryMain {
 				Date date = new Date();
 				SimpleDateFormat formatter = new SimpleDateFormat("yyMMddhhmmss");
 				String strDate = formatter.format(date);
-				writeDelivery[0] = "Delivery" + strDate;
-				System.out.println("메뉴 : " + writeDelivery[0]);
-				String str1 = input.nextLine();
+	
+				System.out.println("메뉴 : ");
+				writeDelivery[0] = input.nextLine();
 				System.out.print("별점 : ");
 				writeDelivery[1] = input.nextLine();
 				System.out.print("가격(숫자) : ");
 				writeDelivery[2] = input.nextLine();
 				System.out.print("소개글 : ");
 				writeDelivery[3] = input.nextLine();
-				System.out.print("X인분 : ");
+				System.out.print("제품양(EX:1인분) : ");
 				writeDelivery[4] = input.nextLine();
 				System.out.print("배달시간 : ");
 				writeDelivery[5] = input.nextLine();
@@ -314,6 +305,15 @@ public class DeliveryMain {
 		}
 	}
 
+	public static void menuList(ArrayList<Delivery> delivery) {
+		setFileToDeliveryList(delivery);
+	}
+
+	public static boolean isCartInMenu(String menu) {
+		return cart.isCartInDelivery(menu);
+	}
+	
+	//영수증 출력
 	public static void printBill(String name, String phone, String address) {
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -322,8 +322,10 @@ public class DeliveryMain {
 		System.out.println("---------------배송 받을 고객 정보----------------");
 		System.out.println("고객명 : " + name + " \t\t 연락처 : " + phone);
 		System.out.println("배송지 : " + address + "\t 발송일 : " + strDate);
+		
 		// 장바구니에 담긴 항목 출력
 		cart.printCart();
+		
 		// 장바구니에 담긴 항목의 총 금액 계산
 		int sum = 0;
 		for (int i = 0; i < cart.cartCount; i++) {
@@ -332,7 +334,6 @@ public class DeliveryMain {
 		System.out.println("\t\t\t 주문 총금액 : " + sum + "원\n");
 		System.out.println("----------------------------------------------");
 		System.out.println();
-
 	}
 
 	public static int totalFileToDeliveryList() {

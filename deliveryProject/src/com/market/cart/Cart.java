@@ -16,11 +16,11 @@ public class Cart implements CartInterface {
 		for (int i = 0; i < deliveryList.size(); i++) {
 			Delivery delivery = deliveryList.get(i);
 			System.out.print(delivery.getMenu() + " | ");// 메뉴
-			System.out.print(delivery.getStarScore() + " | ");// 별점
-			System.out.print(delivery.getIntroduction() + " | ");// 소개글
-			System.out.print(delivery.getCost() + " | ");// 가격
-			System.out.print(delivery.getSize() + " | ");// 1인분
-			System.out.print(delivery.getDeliveryTime());// 배달시간
+			System.out.print("\t"+ delivery.getStarScore() + " | ");// 별점
+			System.out.print("\t"+ delivery.getIntroduction() + " | ");// 소개글
+			System.out.print("\t"+ delivery.getCost() + " | ");// 가격
+			System.out.print("\t"+ delivery.getSize() + " | ");// 1인분
+			System.out.print("\t"+ delivery.getDeliveryTime());// 배달시간
 			System.out.println("");
 		}
 		
