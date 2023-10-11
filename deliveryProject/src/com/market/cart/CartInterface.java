@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.market.delivery.Delivery;
 
 public interface CartInterface {
-	void printDeliveryList(ArrayList<Delivery> deliveryList);
+	void printDeliveryList(ArrayList<Delivery> delivery);
 
 	boolean isCartInDelivery(String menu);
 

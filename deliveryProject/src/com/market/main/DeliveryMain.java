@@ -3,8 +3,10 @@ package com.market.main;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -160,7 +162,7 @@ public class DeliveryMain {
 				inputStr = input.nextLine();
 
 				if (inputStr.toUpperCase().equals("Y") || inputStr.toUpperCase().equals("y")) {
-					System.out.println(delivery.get(num) + " 메뉴가 장바구니에추가되었습니다.");
+					System.out.println(delivery.get(num).getMenu() + " 메뉴가 장바구니에추가되었습니다.");
 					// 장바구니에 넣기
 					if (!isCartInMenu(delivery.get(num).getMenu())) {
 						cart.insertDelivery(delivery.get(num));
@@ -200,7 +202,7 @@ public class DeliveryMain {
 				if (flag) {
 					System.out.println("장바구니의 항목을 삭제하겠습니까? Y | N ");
 					str = input.nextLine();
-					if (str.toUpperCase().equals("Y") || str.toUpperCase().equals("y")){
+					if (str.toUpperCase().equals("Y") || str.toUpperCase().equals("y")) {
 						System.out.println(cart.cartItem.get(numId).getMenu() + "장바구니에서 메뉴가 삭제되었습니다.");
 						cart.removeCart(numId);
 					}
@@ -242,25 +244,10 @@ public class DeliveryMain {
 		System.out.println("8. 종료");
 	}
 
-	public static void menuList(Delivery[] delivery) {
-		delivery[0] = new Delivery("짜장면", "별점 : 4.9점", 7000, "배달시간 : 31~ 46분 소요 예상");
-		delivery[0].setIntroduction("호로록 끊임없이 넘어가는 단맛이 덜한 옛날짜장");
-		delivery[0].setSize("1인분");
-
-		delivery[1] = new Delivery("짬뽕", "별점 : 4.2점", 8000, "배달시간 : 31~ 46분 소요 예상");
-		delivery[1].setIntroduction("강한불에 해물과 야채가 만나 시원함 UP!!UP!!");
-		delivery[1].setSize("1인분");
-
-		delivery[2] = new Delivery("탕수육", "별점 : 4.8점", 22000, "배달시간 : 31~ 46분 소요 예상");
-		delivery[2].setIntroduction("★ 사장님이 강력 추천하는 메뉴!! ★");
-		delivery[2].setSize("2인분");
-
-	}
-	
 	public static void menuList(ArrayList<Delivery> delivery) {
 		setFileToDeliveryList(delivery);
-		}
-	
+	}
+
 	public static boolean isCartInMenu(String menu) {
 		return cart.isCartInDelivery(menu);
 	}
@@ -290,9 +277,9 @@ public class DeliveryMain {
 				String str1 = input.nextLine();
 				System.out.print("별점 : ");
 				writeDelivery[1] = input.nextLine();
-				System.out.print("소개글 : ");
-				writeDelivery[2] = input.nextLine();
 				System.out.print("가격(숫자) : ");
+				writeDelivery[2] = input.nextLine();
+				System.out.print("소개글 : ");
 				writeDelivery[3] = input.nextLine();
 				System.out.print("X인분 : ");
 				writeDelivery[4] = input.nextLine();
@@ -353,9 +340,9 @@ public class DeliveryMain {
 			FileReader fr = new FileReader("delivery.txt");
 			BufferedReader reader = new BufferedReader(fr);
 			String str;
-			int num = 0;// 도서의 개수
+			int num = 0;// 메뉴 갯수
 			while ((str = reader.readLine()) != null) {
-				if (str.contains("starScore")) {
+				if (str.contains("")) {
 					++num;
 				}
 			}
@@ -375,18 +362,16 @@ public class DeliveryMain {
 			String menu;
 			String[] readDelivery = new String[6];
 			int count = 0;
-
+			
 			while ((menu = reader.readLine()) != null) {
-				if (menu.contains("delivery")) {
 					readDelivery[0] = menu;
 					readDelivery[1] = reader.readLine();
 					readDelivery[2] = reader.readLine();
 					readDelivery[3] = reader.readLine();
 					readDelivery[4] = reader.readLine();
 					readDelivery[5] = reader.readLine();
-				}
-				Delivery delivery = new Delivery(readDelivery[0], readDelivery[1], readDelivery[2],
-						Integer.parseInt(readDelivery[3]), readDelivery[4], readDelivery[5]);
+				Delivery delivery = new Delivery(readDelivery[0], readDelivery[1], Integer.parseInt(readDelivery[2]),
+						readDelivery[3], readDelivery[4], readDelivery[5]);
 				deliveryList.add(delivery);
 			}
 			reader.close();

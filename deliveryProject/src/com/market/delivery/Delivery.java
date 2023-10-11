@@ -12,7 +12,7 @@ public class Delivery extends Item {
 		super(menu, starScore, cost, deliveryTime);
 	}
 
-	public Delivery(String menu, String starScore, String introduction, int cost, String size, String deliveryTime) {
+	public Delivery(String menu, String starScore, int cost, String introduction, String size, String deliveryTime) {
 		super(menu, starScore, cost, deliveryTime);
 		this.size = size;
 		this.introduction = introduction;
