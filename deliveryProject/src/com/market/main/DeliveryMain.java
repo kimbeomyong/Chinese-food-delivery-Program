@@ -104,7 +104,7 @@ public class DeliveryMain {
 		System.out.println("3. 장바구니 비우기    \t 4. 장바구니에 항목 추가하기");
 		System.out.println("5. 장바구니의 항목 삭제하기  \t 6.영수증 표시하기 ");
 		System.out.println("7. 종료");
-		System.out.println("(8)메뉴 목록 추가(사장님만 사용하세요!!)");
+		System.out.println("8. 메뉴 목록 추가(사장님만 사용하세요!!)");
 		System.out.println("----------------------------------------------");
 	}
 
@@ -363,6 +363,7 @@ public class DeliveryMain {
 		return 0;
 	}
 
+	//메뉴 목록 리스트 정보를 읽고 배열에 저장하는 메서드
 	public static void setFileToDeliveryList(ArrayList<Delivery> deliveryList) {
 		try {
 			FileReader fr = new FileReader("delivery.txt");

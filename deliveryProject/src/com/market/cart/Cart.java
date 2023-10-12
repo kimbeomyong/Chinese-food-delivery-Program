@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.market.delivery.Delivery;
 
+//cartInterface를 구현.
 public class Cart implements CartInterface {
 	public ArrayList<CartItem> cartItem = new ArrayList<CartItem>();
 	public static int cartCount = 0;
@@ -16,21 +17,21 @@ public class Cart implements CartInterface {
 		for (int i = 0; i < deliveryList.size(); i++) {
 			Delivery delivery = deliveryList.get(i);
 			System.out.print(delivery.getMenu() + " | ");// 메뉴
-			System.out.print("\t"+ delivery.getStarScore() + " | ");// 별점
-			System.out.print("\t"+ delivery.getIntroduction() + " | ");// 소개글
-			System.out.print("\t"+ delivery.getCost() + " | ");// 가격
-			System.out.print("\t"+ delivery.getSize() + " | ");// 1인분
-			System.out.print("\t"+ delivery.getDeliveryTime());// 배달시간
+			System.out.print(delivery.getStarScore() + "\t|");// 별점
+			System.out.print(delivery.getIntroduction() + "\t| ");// 소개글
+			System.out.print(delivery.getCost() + "\t| ");// 가격
+			System.out.print(delivery.getSize() + "\t| ");// 1인분
+			System.out.print(delivery.getDeliveryTime());// 배달시간
 			System.out.println("");
 		}
-		
+
 	}
 
 	@Override
 	public boolean isCartInDelivery(String menu) {
 		boolean flag = false;
 		for (int i = 0; i < cartItem.size(); i++) {
-			if(menu.equals(cartItem.get(i).getMenu())) {
+			if (menu.equals(cartItem.get(i).getMenu())) {
 				cartItem.get(i).setQuantity(cartItem.get(i).getQuantity() + 1);
 				flag = true;
 			}
@@ -60,15 +61,14 @@ public class Cart implements CartInterface {
 	public void printCart() {
 		System.out.println("배달 목록 보기");
 		System.out.println("---------------------------------------------");
-		System.out.println(" 메뉴\t | 수량 \t|  합계");
+		System.out.println("  메뉴 \t| 수 량  \t|  합 계");
 		for (int i = 0; i < cartItem.size(); i++) {
-			System.out.print("  " + cartItem.get(i).getMenu() + " \t| ");
-			System.out.print("  " + cartItem.get(i).getQuantity() + " \t| ");
-			System.out.print("  " + cartItem.get(i).getTotalPrice());
+			System.out.print(" " + cartItem.get(i).getMenu() + " \t| ");
+			System.out.print(" " + cartItem.get(i).getQuantity() + "  \t| ");
+			System.out.print(" " + cartItem.get(i).getTotalPrice());
 			System.out.println(" ");
 		}
 		System.out.println("---------------------------------------------");
 	}
-
 
 }
